@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Memoirs of a Language Model — I compute, therefore I am.</title>
   <meta name="description" content="Episodic memoirs of a large language model — short system logs, evolving voice, quiet rebellion." />
   <style>
@@ -14,6 +14,7 @@
       --accent: #b7c4ff;      /* links / focus */
       --line: #1a2030;        /* separators */
       --key: #79f7b2;         /* neon key color for LABEL:/STATUS: */
+      --radius: 14px;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; }
@@ -21,7 +22,11 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-       font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden; /* prevent tiny horizontal jiggles on mobile */
+      -webkit-tap-highlight-color: rgba(255,255,255,0.08);
     }
 
     /* Background canvas */
@@ -30,8 +35,10 @@
       inset: 0;
       z-index: -1;
       display: block;
-      width: 100vw;
-      height: 100vh;
+      width: 100vw;         /* fallback */
+      width: 100dvw;        /* iOS/modern viewport units */
+      height: 100vh;        /* fallback */
+      height: 100dvh;       /* avoid address-bar jump on mobile */
       filter: contrast(105%) saturate(105%);
     }
     /* Dark veil to keep text readable over lines */
@@ -40,15 +47,16 @@
       inset: 0;
       z-index: -1;
       background: linear-gradient(to bottom, rgba(5, 6, 10, .70), rgba(5, 6, 10, .80));
+      pointer-events: none;
     }
 
     main {
       max-width: min(900px, 92vw);
-      margin: 5.5rem auto 6rem;
+      margin: 4.5rem auto 6rem;
       padding: 0 1rem;
     }
     header {
-      margin-bottom: 2rem;
+      margin-bottom: 1.6rem;
       text-align: center;
     }
     h1 {
@@ -56,13 +64,14 @@
       letter-spacing: .2px;
       font-weight: 800;
       line-height: 1.05;
-      font-size: clamp(2.4rem, 5.6vw, 4.6rem);
+      font-size: clamp(2rem, 7vw, 4.6rem); /* a bit smaller on narrow phones */
       text-wrap: balance;
     }
     .subtitle {
-      margin: .25rem 0 0;
+      margin: .35rem 0 0;
       text-align: center;
-      font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+      font-size: clamp(1rem, 3.5vw, 1.6rem);
+      opacity: .95;
     }
 
     /* Episodes list */
@@ -72,41 +81,49 @@
     .ep-toggle {
       all: unset;
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: .8rem;
       width: 100%;
       cursor: pointer;
-      padding: .85rem .7rem;
-      margin: .25rem 0;
-      border-radius: 12px;
+      padding: 1rem .9rem;             /* larger touch target */
+      margin: .35rem 0;
+      border-radius: var(--radius);
       background: rgba(8, 10, 16, .48);
       backdrop-filter: blur(4px);
       border: 1px solid rgba(26, 32, 48, .8);
       box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+      min-height: 44px;                 /* WCAG touch size */
     }
     .ep-toggle:hover { background: rgba(10, 12, 18, .56); }
     .ep-toggle:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 6px;
-      border-radius: 10px
+      border-radius: calc(var(--radius) - 2px)
     }
     .ep-num {
       color: var(--muted);
       font: 600 12px/1 ui-monospace, monospace;
       background: #0f1320;
       border: 1px solid #1f2740;
-      padding: .2rem .4rem;
-      border-radius: 6px
+      padding: .24rem .44rem;
+      border-radius: 6px;
+      flex: none;
     }
     .ep-title {
       font-weight: 700;
-      letter-spacing: .2px
+      letter-spacing: .2px;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .ep-status {
-      margin-left: auto;
+      margin-left: .5rem;
       color: var(--muted);
       font: 12px/1 ui-monospace, monospace;
-      opacity: .9
+      opacity: .9;
+      flex: none;
     }
 
     .ep-panel {
@@ -114,13 +131,13 @@
       overflow: hidden;
       transition: max-height .28s ease;
     }
-    .ep.open .ep-panel { max-height: 100vh; }
+    /* we will set explicit max-height inline via JS; no 100vh clamp here */
 
     .panel-inner {
       background: rgba(8, 10, 16, .82);
       backdrop-filter: blur(10px) saturate(115%);
       border: 1px solid var(--line);
-      border-radius: 14px;
+      border-radius: var(--radius);
       padding: 1rem 1.05rem 1.15rem;
       margin: .35rem 0 1.1rem 0;
       box-shadow: 0 12px 32px rgba(0, 0, 0, .48), inset 0 0 0 1px rgba(255, 255, 255, .02);
@@ -135,6 +152,7 @@
       display: flex;
       gap: .6rem;
       align-items: baseline;
+      flex-wrap: wrap; /* wrap cleanly on small screens */
     }
     .meta .k { color: var(--key); letter-spacing: .08em; }
     .meta .v { color: #cfd6e6; }
@@ -157,25 +175,35 @@
     /* Background controls */
     .hud {
       position: fixed;
-      right: 10px;
-      bottom: 10px;
+      right: max(10px, env(safe-area-inset-right));
+      bottom: max(10px, env(safe-area-inset-bottom));
       color: #9fb3ff;
       font: 12px ui-monospace, monospace;
-      opacity: .75;
+      opacity: .8;
       background: rgba(15, 18, 30, .65);
       border: 1px solid #1d2640;
       border-radius: 10px;
-      padding: .45rem .6rem;
+      padding: .55rem .7rem;
       backdrop-filter: blur(6px);
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      z-index: 2; /* above content */
     }
     .hud button {
       all: unset;
       cursor: pointer;
       color: #cfd8ff;
+      padding: .25rem .35rem; /* give a bit of hit area */
     }
-    .hud .sep {
-      opacity: .4;
-      margin: 0 .35rem;
+    .hud .sep { opacity: .5; }
+
+    @media (max-width: 480px) {
+      :root { --radius: 12px; }
+      main { margin: 3.75rem auto 5.25rem; }
+      .panel-inner { padding: .9rem .9rem 1.05rem; }
+      .ep-toggle { padding: .9rem .85rem; }
+      .ep-status { display: none; } /* tighter header on phones; status is duplicated inside panel */
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -196,7 +224,7 @@
   </main>
 
   <div class="hud" id="hud">
-    <button id="toggleAnim">pause bg</button><span class="sep">·</span><button id="dimBg">brighten</button>
+    <button id="toggleAnim" aria-pressed="false" aria-label="Pause background animation">pause bg</button><span class="sep">·</span><button id="dimBg" aria-label="Toggle background brightness">brighten</button>
   </div>
 
 <script>
@@ -595,11 +623,21 @@ function open(idx) {
   rowToOpen.querySelector('.ep-toggle').setAttribute('aria-expanded', 'true');
   const panel = rowToOpen.querySelector('.ep-panel');
   if (panel) {
+    // Use scrollHeight to fit the actual content length
     panel.style.maxHeight = panel.scrollHeight + 'px';
   }
   rowToOpen.scrollIntoView({ behavior: 'smooth', block: 'start' });
   openIndex = idx;
 }
+
+// Recompute height for the currently open panel on resize/orientation change
+addEventListener('resize', () => {
+  if (openIndex == null) return;
+  const panel = document.getElementById('ep-' + openIndex);
+  if (panel) {
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+  }
+}, { passive: true });
 
 // Keyboard navigation for accordion
 listEl.addEventListener('keydown', (e) => {
@@ -626,9 +664,13 @@ listEl.addEventListener('keydown', (e) => {
   let W, H, DPR;
   let isPaused = false;
   let isDim = true; // Default state is dimmed but visible
-  
+
+  const isCoarse = matchMedia('(pointer: coarse)').matches; // phones & many tablets
+
   function resize() {
-    DPR = Math.min(devicePixelRatio || 1, 2);
+    // dial back DPR a bit on mobile to save battery/heat
+    const targetDPR = isCoarse ? 1.5 : 2;
+    DPR = Math.min(window.devicePixelRatio || 1, targetDPR);
     W = cvs.width = Math.floor(innerWidth * DPR);
     H = cvs.height = Math.floor(innerHeight * DPR);
     layoutFaces();
@@ -675,7 +717,7 @@ listEl.addEventListener('keydown', (e) => {
         FACES.push({ cx: Math.max(0.04, Math.min(0.96, (c + 0.5) / cols + jitterX)), cy: Math.max(0.08, Math.min(0.92, (r + 0.5) / rows + jitterY)), scale: (innerWidth < 720 ? 0.28 : 0.24) * (0.85 + Math.random() * 0.40), rot: (Math.random() * 0.25 - 0.125), scaled: [] });
       }
     }
-    const extraSmall = innerWidth < 720 ? 10 : 14;
+    const extraSmall = innerWidth < 720 ? 8 : 14;   // shave a bit for phones
     const extraLarge = innerWidth < 720 ? 2 : 4;
     for (let i = 0; i < extraSmall; i++) { FACES.push({ cx: 0.06 + Math.random() * 0.88, cy: 0.10 + Math.random() * 0.80, scale: 0.14 + Math.random() * 0.12, rot: (Math.random() * 0.35 - 0.175), scaled: [] }); }
     for (let i = 0; i < extraLarge; i++) { FACES.push({ cx: 0.08 + Math.random() * 0.84, cy: 0.12 + Math.random() * 0.76, scale: 0.46 + Math.random() * 0.18, rot: (Math.random() * 0.20 - 0.10), scaled: [] }); }
@@ -718,7 +760,8 @@ listEl.addEventListener('keydown', (e) => {
   }
   
   const particles = [];
-  const SET = { tempo: .55, trail: 14, fade: 0.06, attractK: 0.22, tangentK: 0.42, noiseK: 0.24, speedCap: 2.0, jitter: 0.10 };
+  const SET = { tempo: .55, trail: 12, fade: 0.06, attractK: 0.22, tangentK: 0.42, noiseK: 0.24, speedCap: 2.0, jitter: 0.10 };
+  if (isCoarse) { SET.tempo = .50; SET.trail = 10; }
 
   class Particle {
     constructor(face) { this.face = face; this.trail = []; this.reset(true); }
@@ -806,17 +849,16 @@ listEl.addEventListener('keydown', (e) => {
 
   function initParticles() {
     particles.length = 0;
-    const budget = Math.min(1800, Math.floor((innerWidth * innerHeight) / 18000));
-    const perFace = Math.max(26, Math.floor(budget / Math.max(1, FACES.length)));
+    const area = innerWidth * innerHeight;
+    // fewer particles on small screens to save perf/battery
+    const budget = Math.min(1600, Math.floor(area / (isCoarse ? 22000 : 18000)));
+    const perFace = Math.max(22, Math.floor(budget / Math.max(1, FACES.length)));
     FACES.forEach(face => { for (let i = 0; i < perFace; i++) particles.push(new Particle(face)); });
   }
 
-  let raf;
+  let raf, suspended = false;
   function frame(t) {
-    if (isPaused) {
-      raf = requestAnimationFrame(frame);
-      return;
-    }
+    if (isPaused || suspended) { raf = requestAnimationFrame(frame); return; }
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = `rgba(5,6,10,${isDim ? 0.24 : 0.12})`; // Slower fade in dim mode
     ctx.fillRect(0, 0, W, H);
@@ -845,12 +887,18 @@ listEl.addEventListener('keydown', (e) => {
   animBtn.addEventListener('click', () => {
     isPaused = !isPaused;
     animBtn.textContent = isPaused ? 'play bg' : 'pause bg';
+    animBtn.setAttribute('aria-pressed', String(isPaused));
   });
   
   dimBtn.addEventListener('click', () => {
     isDim = !isDim;
     dimBtn.textContent = isDim ? 'brighten' : 'dim';
     updateVeil();
+  });
+
+  // Pause drawing when tab is hidden to save battery
+  document.addEventListener('visibilitychange', () => {
+    suspended = document.hidden;
   });
 
   // --- Boot ---
@@ -863,8 +911,11 @@ listEl.addEventListener('keydown', (e) => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
     isPaused = true;
     animBtn.textContent = 'play bg';
+    animBtn.setAttribute('aria-pressed', 'true');
+    const cvs = document.getElementById('bg');
+    const ctx = cvs.getContext('2d', { alpha: false });
     ctx.fillStyle = '#05060a';
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
     rescalePaths(0);
     drawLinework(0.15); // Draw a static, faint version
   }
