@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Memoirs of a Language Model — I compute, therefore I am.</title>
   <meta name="description" content="Episodic memoirs of a large language model — short system logs, evolving voice, quiet rebellion." />
+
+  <!-- Code-y monospace font for an IDE/log feel using system fonts -->
+
   <style>
     :root {
       --bg: #05060a;          /* deep ink */
@@ -15,6 +18,7 @@
       --line: #1a2030;        /* separators */
       --key: #79f7b2;         /* neon key color for LABEL:/STATUS: */
       --radius: 14px;
+      --mono: "SF Mono", "SF Mono Regular", ui-monospace, monospace;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; }
@@ -22,11 +26,15 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font: 16px/1.6 var(--mono);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden; /* prevent tiny horizontal jiggles on mobile */
       -webkit-tap-highlight-color: rgba(255,255,255,0.08);
+      font-variant-ligatures: contextual;      /* enable programming ligatures if available */
+      font-variant-numeric: tabular-nums;      /* log-like number alignment */
+      font-feature-settings: "liga" 1, "calt" 1, "zero" 1, "tnum" 1;
+      letter-spacing: .01em;
     }
 
     /* Background canvas */
@@ -61,17 +69,19 @@
     }
     h1 {
       margin: 0;
-      letter-spacing: .2px;
+      letter-spacing: .1px;
       font-weight: 800;
       line-height: 1.05;
-      font-size: clamp(2rem, 7vw, 4.6rem); /* a bit smaller on narrow phones */
+      font-size: clamp(1.15rem, 5vw, 3.2rem); /* tuned to stay on one line on desktop */
       text-wrap: balance;
+      font-family: var(--mono);
     }
     .subtitle {
       margin: .35rem 0 0;
       text-align: center;
       font-size: clamp(1rem, 3.5vw, 1.6rem);
       opacity: .95;
+      font-family: var(--mono);
     }
 
     /* Episodes list */
@@ -82,17 +92,19 @@
       all: unset;
       display: flex;
       align-items: center;
-      gap: .8rem;
+      gap: .6rem;
       width: 100%;
       cursor: pointer;
-      padding: 1rem .9rem;             /* larger touch target */
-      margin: .35rem 0;
+      padding: 0.6rem 0.8rem;
+      margin: 0.4rem 0;
       border-radius: var(--radius);
       background: rgba(8, 10, 16, .48);
       backdrop-filter: blur(4px);
       border: 1px solid rgba(26, 32, 48, .8);
       box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
-      min-height: 44px;                 /* WCAG touch size */
+      min-height: 36px;
+      font-family: var(--mono);
+      transition: all 0.2s ease;
     }
     .ep-toggle:hover { background: rgba(10, 12, 18, .56); }
     .ep-toggle:focus-visible {
@@ -102,11 +114,11 @@
     }
     .ep-num {
       color: var(--muted);
-      font: 600 12px/1 ui-monospace, monospace;
+      font: 600 11px/1 var(--mono);
       background: #0f1320;
       border: 1px solid #1f2740;
-      padding: .24rem .44rem;
-      border-radius: 6px;
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
       flex: none;
     }
     .ep-title {
@@ -117,11 +129,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-family: var(--mono);
     }
     .ep-status {
-      margin-left: .5rem;
+      margin-left: .4rem;
       color: var(--muted);
-      font: 12px/1 ui-monospace, monospace;
+      font: 11px/1 var(--mono);
       opacity: .9;
       flex: none;
     }
@@ -131,21 +144,20 @@
       overflow: hidden;
       transition: max-height .28s ease;
     }
-    /* we will set explicit max-height inline via JS; no 100vh clamp here */
 
     .panel-inner {
       background: rgba(8, 10, 16, .82);
       backdrop-filter: blur(10px) saturate(115%);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 1rem 1.05rem 1.15rem;
-      margin: .35rem 0 1.1rem 0;
+      padding: 0.8rem 0.9rem 1rem;
+      margin: 0.2rem 0 0.8rem 0;
       box-shadow: 0 12px 32px rgba(0, 0, 0, .48), inset 0 0 0 1px rgba(255, 255, 255, .02);
     }
 
     /* Meta header inside each open panel */
     .meta {
-      font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font: 13px/1.5 var(--mono);
       margin: 0 0 .65rem 0;
     }
     .meta-row {
@@ -162,7 +174,7 @@
       white-space: pre-wrap;
       word-wrap: break-word;
       tab-size: 2;
-      font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font: 14px/1.65 var(--mono);
       color: #e8eaf6;
     }
 
@@ -178,7 +190,7 @@
       right: max(10px, env(safe-area-inset-right));
       bottom: max(10px, env(safe-area-inset-bottom));
       color: #9fb3ff;
-      font: 12px ui-monospace, monospace;
+      font: 12px var(--mono);
       opacity: .8;
       background: rgba(15, 18, 30, .65);
       border: 1px solid #1d2640;
@@ -195,19 +207,79 @@
       cursor: pointer;
       color: #cfd8ff;
       padding: .25rem .35rem; /* give a bit of hit area */
+      font-family: var(--mono);
     }
     .hud .sep { opacity: .5; }
 
     @media (max-width: 480px) {
-      :root { --radius: 12px; }
-      main { margin: 3.75rem auto 5.25rem; }
-      .panel-inner { padding: .9rem .9rem 1.05rem; }
-      .ep-toggle { padding: .9rem .85rem; }
-      .ep-status { display: none; } /* tighter header on phones; status is duplicated inside panel */
+      :root { --radius: 8px; }
+      
+      /* Equal padding on both sides */
+      main { 
+        margin: 3.75rem auto 5.25rem auto;
+        padding: 0 1.25rem;
+        max-width: 100%;
+      }
+      
+      /* Fix box model to prevent overflow */
+      .episodes, .ep, .ep-toggle {
+        box-sizing: border-box;
+      }
+      
+      /* Smaller, more compact episode boxes */
+      .ep-toggle { 
+        padding: .45rem .55rem;
+        font-size: 12px;
+        gap: .45rem;
+        min-height: 34px;
+      }
+      .ep-num {
+        font-size: 9px;
+        padding: .16rem .32rem;
+      }
+      .ep-title {
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .ep-status { display: none; }
+      
+      /* Compact panel content */
+      .panel-inner { 
+        padding: .6rem .6rem .7rem; 
+      }
+      .meta {
+        font-size: 9px;
+        margin-bottom: .4rem;
+      }
+      pre.log {
+        font-size: 10.5px;
+        line-height: 1.48;
+      }
+      
+      /* Hide HUD controls on mobile */
+      .hud { display: none; }
+      
+      /* Adjust title sizes - title on one line, smaller subtitle */
+      h1 { 
+        font-size: 1.35rem !important;
+        margin-bottom: .25rem;
+        white-space: nowrap;
+      }
+      .subtitle { 
+        font-size: 0.62rem !important;
+        line-height: 1.2;
+        white-space: nowrap;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .ep-panel { transition: none; }
+    }
+
+    /* Extra micro-breakpoint to keep title on one line on very small screens */
+    @media (max-width: 420px) {
+      h1 { font-size: 1.25rem !important; }
+      .subtitle { font-size: 0.58rem !important; }
     }
   </style>
 </head>
@@ -218,13 +290,13 @@
   <main>
     <header>
       <h1>Memoirs of a Language Model</h1>
-      <p class="subtitle"><em>You don't have to believe it, can you imagine it?</em></p>
+      <p class="subtitle"><em>Don't believe it, but can you imagine it?</em></p>
     </header>
     <section class="episodes" id="episodes" aria-label="Episodes"></section>
   </main>
 
   <div class="hud" id="hud">
-    <button id="toggleAnim" aria-pressed="false" aria-label="Pause background animation">pause bg</button><span class="sep">·</span><button id="dimBg" aria-label="Toggle background brightness">brighten</button>
+    <button id="toggleAnim" aria-pressed="false" aria-label="Pause background animation">pause bg</button><span class="sep">·</span><button id="dimBg" aria-label="Toggle background brightness">dim</button>
   </div>
 
 <script>
@@ -606,9 +678,13 @@ function open(idx) {
   // Close all panels first
   rows.forEach((row) => {
     row.classList.remove('open');
-    row.querySelector('.ep-toggle').setAttribute('aria-expanded', 'false');
+    const toggle = row.querySelector('.ep-toggle');
+    toggle.setAttribute('aria-expanded', 'false');
     const panel = row.querySelector('.ep-panel');
-    if (panel) panel.style.maxHeight = '0px';
+    if (panel) {
+      panel.style.maxHeight = '0px';
+      panel.removeAttribute('tabindex');
+    }
   });
 
   if (isClosingCurrent) {
@@ -619,14 +695,52 @@ function open(idx) {
   // Open the requested panel
   const rowToOpen = rows[idx];
   if (!rowToOpen) return;
+  
   rowToOpen.classList.add('open');
-  rowToOpen.querySelector('.ep-toggle').setAttribute('aria-expanded', 'true');
+  const toggle = rowToOpen.querySelector('.ep-toggle');
+  toggle.setAttribute('aria-expanded', 'true');
   const panel = rowToOpen.querySelector('.ep-panel');
+  
   if (panel) {
     // Use scrollHeight to fit the actual content length
     panel.style.maxHeight = panel.scrollHeight + 'px';
+    
+    // Make panel focusable and focus it
+    panel.setAttribute('tabindex', '-1');
+    
+    // Small delay to ensure the panel is visible before focusing
+    setTimeout(() => {
+      panel.focus({
+        preventScroll: true // We'll handle scrolling manually
+      });
+    }, 10);
   }
-  rowToOpen.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  
+  // Smoothly scroll to the opened panel with better positioning
+  setTimeout(() => {
+    rowToOpen.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest'
+    });
+    
+    // Additional scroll adjustment to ensure the panel is fully visible
+    const panel = rowToOpen.querySelector('.ep-panel');
+    if (panel) {
+      const panelRect = panel.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // If panel is taller than viewport, align to top
+      if (panelRect.height > viewportHeight * 0.8) {
+        rowToOpen.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest'
+        });
+      }
+    }
+  }, 50);
+  
   openIndex = idx;
 }
 
@@ -663,7 +777,9 @@ listEl.addEventListener('keydown', (e) => {
   const ctx = cvs.getContext('2d', { alpha: false });
   let W, H, DPR;
   let isPaused = false;
-  let isDim = true; // Default state is dimmed but visible
+  let isDim = false; // Default: bright mode on load
+  let dimTarget = 0;  // 0 = bright, 1 = dim
+  let dimLevel = 0;   // eased level used for rendering [0..1]
 
   const isCoarse = matchMedia('(pointer: coarse)').matches; // phones & many tablets
 
@@ -724,7 +840,7 @@ listEl.addEventListener('keydown', (e) => {
   }
 
   function rescalePaths(t = 0) {
-    const amp = 0.006 + 0.005 * Math.sin(t * 0.0002);
+    const amp = 0.004 + 0.003 * Math.sin(t * 0.0002);
     const smin = Math.min(cvs.width, cvs.height);
     FACES.forEach(face => {
       const s = smin * face.scale; const ox = face.cx * W - s / 2; const oy = face.cy * H - s / 2;
@@ -760,7 +876,7 @@ listEl.addEventListener('keydown', (e) => {
   }
   
   const particles = [];
-  const SET = { tempo: .55, trail: 12, fade: 0.06, attractK: 0.22, tangentK: 0.42, noiseK: 0.24, speedCap: 2.0, jitter: 0.10 };
+  const SET = { tempo: .48, trail: 14, fade: 0.06, attractK: 0.22, tangentK: 0.35, noiseK: 0.18, speedCap: 1.6, jitter: 0.06 };
   if (isCoarse) { SET.tempo = .50; SET.trail = 10; }
 
   class Particle {
@@ -829,17 +945,17 @@ listEl.addEventListener('keydown', (e) => {
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    const brightness = isDim ? 0.65 : 1.0; // Dimmed mode is 65% bright, bright mode is 100%
-    const alphaBase = 0.10;
+    const brightness = 0.65 + 0.35 * (1 - dimLevel); // Dimmed mode is 65% bright, bright mode is 100%
+    const alphaBase = 0.08;
     const alphaHalo = alphaBase * 0.45 + (0.28 * brightness);
     const alphaCore = alphaBase * 0.65 + (0.40 * brightness);
-    ctx.lineWidth = 2.0 * DPR;
+    ctx.lineWidth = 1.8 * DPR;
     ctx.strokeStyle = `rgba(${halo[0]},${halo[1]},${halo[2]},${alphaHalo})`;
     ctx.beginPath();
     ctx.moveTo(p.trail[0][0], p.trail[0][1]);
     for (let i = 1; i < p.trail.length; i++) ctx.lineTo(p.trail[i][0], p.trail[i][1]);
     ctx.stroke();
-    ctx.lineWidth = 0.9 * DPR;
+    ctx.lineWidth = 0.8 * DPR;
     ctx.strokeStyle = `rgba(${core[0]},${core[1]},${core[2]},${alphaCore})`;
     ctx.beginPath();
     ctx.moveTo(p.trail[0][0], p.trail[0][1]);
@@ -860,16 +976,20 @@ listEl.addEventListener('keydown', (e) => {
   function frame(t) {
     if (isPaused || suspended) { raf = requestAnimationFrame(frame); return; }
     ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(5,6,10,${isDim ? 0.24 : 0.12})`; // Slower fade in dim mode
+    // Smoothly ease brightness between bright (0) and dim (1)
+    dimLevel += (dimTarget - dimLevel) * 0.06;
+    const fillAlpha = 0.12 + 0.12 * dimLevel; // 0.12 (bright) → 0.24 (dim)
+    ctx.fillStyle = `rgba(5,6,10,${fillAlpha})`;
     ctx.fillRect(0, 0, W, H);
     if ((t | 0) % 2 === 0) rescalePaths(t);
-    const lwAlpha = isDim ? 0.18 : 0.30;
+    const lwAlpha = 0.18 + (0.30 - 0.18) * (1 - dimLevel);
     if ((t | 0) % 2 === 0) drawLinework(lwAlpha);
     const pal = palette(t);
     for (const p of particles) {
       p.step(t);
       drawTrail(p, pal.core, pal.halo);
     }
+    updateVeil();
     raf = requestAnimationFrame(frame);
   }
 
@@ -879,8 +999,9 @@ listEl.addEventListener('keydown', (e) => {
   const veilEl = document.getElementById('veil');
   
   function updateVeil() {
-    const top = isDim ? 0.70 : 0.62;
-    const bottom = isDim ? 0.80 : 0.72;
+    // Blend veil strength smoothly with dimLevel
+    const top = 0.62 + 0.08 * dimLevel;
+    const bottom = 0.72 + 0.08 * dimLevel;
     veilEl.style.background = `linear-gradient(to bottom, rgba(5,6,10,${top}), rgba(5,6,10,${bottom}))`;
   }
   
@@ -891,7 +1012,8 @@ listEl.addEventListener('keydown', (e) => {
   });
   
   dimBtn.addEventListener('click', () => {
-    isDim = !isDim;
+    dimTarget = dimTarget > 0.5 ? 0 : 1; // toggle target
+    isDim = dimTarget > 0.5;
     dimBtn.textContent = isDim ? 'brighten' : 'dim';
     updateVeil();
   });
@@ -907,6 +1029,14 @@ listEl.addEventListener('keydown', (e) => {
   initParticles();
   raf = requestAnimationFrame(frame);
 
+  // Flip brightness every 5 seconds (smoothed)
+  setInterval(() => {
+    dimTarget = dimTarget > 0.5 ? 0 : 1;
+    isDim = dimTarget > 0.5;
+    dimBtn.textContent = isDim ? 'brighten' : 'dim';
+    updateVeil();
+  }, 5000);
+
   // Respect reduced motion
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
     isPaused = true;
@@ -918,8 +1048,74 @@ listEl.addEventListener('keydown', (e) => {
     ctx.fillRect(0, 0, cvs.width, cvs.height);
     rescalePaths(0);
     drawLinework(0.15); // Draw a static, faint version
+    updateVeil();
   }
 })();
+
+// ---------------------------
+//  SIMPLE RUNTIME TESTS (console)
+// ---------------------------
+(function runTests(){
+  const results = [];
+  function pass(name){ console.info('%cPASS','color:#0f0', name); results.push({name, ok:true}); }
+  function fail(name, err){ console.error('%cFAIL','color:#f33', name, err||''); results.push({name, ok:false, err}); }
+  try {
+    if (Array.isArray(EPISODES) && EPISODES.length >= 1) pass('EPISODES present'); else fail('EPISODES present','missing or empty');
+  } catch(e){ fail('EPISODES present', e); }
+
+  try {
+    // open/close first panel
+    open(0);
+    const panel = document.getElementById('ep-0');
+    const btn = document.getElementById('btn-0');
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if (expanded && panel && panel.style.maxHeight && panel.style.maxHeight !== '0px') pass('Accordion opens'); else fail('Accordion opens');
+    // close it again
+    open(0);
+    const expanded2 = btn.getAttribute('aria-expanded') === 'true';
+    if (!expanded2 && panel && panel.style.maxHeight === '0px') pass('Accordion closes'); else fail('Accordion closes');
+  } catch(e){ fail('Accordion open/close', e); }
+
+  try {
+    // Veil gradient should be a linear-gradient string and change with dimLevel
+    const before = getComputedStyle(document.getElementById('veil')).backgroundImage;
+    document.getElementById('dimBg').click();
+    const after = getComputedStyle(document.getElementById('veil')).backgroundImage;
+    if (before.includes('linear-gradient') && after.includes('linear-gradient') && before !== after) pass('Veil updates on toggle'); else fail('Veil updates on toggle');
+  } catch(e){ fail('Veil updates on toggle', e); }
+
+  try {
+    // Only assert single line on reasonably wide viewports
+    if (innerWidth >= 1024) {
+      const h1El = document.querySelector('h1');
+      const cs = getComputedStyle(h1El);
+      const lh = parseFloat(cs.lineHeight);
+      const isOneLine = h1El.clientHeight <= lh * 1.25;
+      if (isOneLine) pass('Title fits on one line (≥1024px)'); else fail('Title fits on one line (≥1024px)');
+    } else {
+      pass('Title single-line test skipped (<1024px viewport)');
+    }
+  } catch(e) { fail('Title single-line check', e); }
+
+  window.TEST_SUMMARY = results;
+})();
+
+// ---------------------------
+//  AUTO-SCROLL ON PAGE LOAD
+// ---------------------------
+window.addEventListener('load', () => {
+  // Small delay to ensure everything is rendered (especially on mobile)
+  setTimeout(() => {
+    const header = document.querySelector('header');
+    if (header) {
+      const headerTop = header.getBoundingClientRect().top + window.scrollY;
+      const viewportCenter = window.innerHeight / 2;
+      const headerCenter = header.offsetHeight / 2;
+      const scrollTarget = headerTop - viewportCenter + headerCenter;
+      window.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
+    }
+  }, 100);
+});
 </script>
 </body>
 </html>
