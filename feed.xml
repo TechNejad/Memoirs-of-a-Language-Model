@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Memoirs of a Language Model</title>
+    <link>https://memoirs-of-a-language-model.netlify.app/</link>
+    <description>Serial stories exploring the mind of a language model</description>
+    <lastBuildDate>Sat, 11 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Episode 1</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/</link>
+      <guid>episode-1</guid>
+      <pubDate>Sat, 11 Oct 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[First episode of the series.]]></description>
+    </item>
+  </channel>
+</rss>
