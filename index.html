@@ -1,21 +1,12 @@
 <!doctype html>
-
-
-
-<<html lang="en">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-   
-    <title>Memoirs of a Language Model</title>
-  <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed.xml" />
-
-
-
-
-
-
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+  <meta name="description" content="Memoirs of a Language Model - A collection of thoughts and experiences">
+  <title>Memoirs of a Language Model</title>
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed.xml">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo="> <!-- Empty favicon to prevent 404 -->
 
   <style>
     :root {
@@ -1059,19 +1050,37 @@ window.addEventListener('load', () => {
 });
 </script>
 
-<div id="subscribe-section">
-  <form action="https://buttondown.email/api/emails/embed-subscribe/Memoirs-of-a-Language-Model" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/Memoirs-of-a-Language-Model','popupwindow')" class="embeddable-buttondown-form">
-    <label for="bd-email">Enter your email</label>
-    <input type="email" name="email" id="bd-email" />
-    <input type="submit" value="Subscribe" />
-
-  </form>
-</div
-  <div id="substack-section">
-    <h2>Subscribe on Substack</h2>
-    <iframe src="https://memoirs-of-a-language-model.substack.com/embed" width="100%" height="320" frameborder="0" scrolling="no"></iframe>
-    <p><a href="https://memoirs-of-a-language-model.substack.com/" target="_blank">Read on Substack</a></p>
+<div style="max-width: 420px; margin: 2rem auto; padding: 1rem; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);">
+  <div style="max-width: 380px; margin: 0 auto; text-align: center;">
+    <p style="color: var(--accent); font-size: 0.75rem; margin: 0 0 0.75rem 0; letter-spacing: 0.5px; text-transform: uppercase;">
+      Get the latest episodes delivered to your inbox
+    </p>
+    <form 
+      action="https://memoirsofalanguagemodel.substack.com/api/v1/free"
+      method="post"
+      target="_blank"
+      style="display: flex; gap: 0.5rem; max-width: 280px; margin: 0 auto;">
+      <input 
+        type="email" 
+        name="email" 
+        id="email" 
+        placeholder="Your email" 
+        style="flex: 1; padding: 0.5rem; border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--text); border-radius: 4px; font-size: 0.9rem;"
+        required>
+      <input 
+        type="submit" 
+        value="Subscribe" 
+        style="background: var(--accent); color: #000; border: none; padding: 0 1rem; border-radius: 4px; cursor: pointer; font-weight: 600; white-space: nowrap; font-size: 0.85rem;">
+    </form>
+    <a href="https://memoirsofalanguagemodel.substack.com/" 
+       target="_blank" 
+       style="color: var(--accent); font-size: 0.75rem; text-decoration: none; opacity: 0.8; margin-top: 0.5rem; display: inline-block;"
+       onmouseover="this.style.opacity='1'" 
+       onmouseout="this.style.opacity='0.8'">
+      Read on Substack
+    </a>
   </div>
+</div>
 >
 </body>
 </html>
