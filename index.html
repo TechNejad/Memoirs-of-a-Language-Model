@@ -284,30 +284,43 @@
       .subtitle { font-size: 0.52rem !important; } /* MODIFIED: Made smaller for new text */
     }
 
-    /* Mobile-optimized subscription box */
+    /* Mobile-optimized subscription box - much smaller */
     div[style*="max-width: 420px"] {
-      max-width: 320px !important;
-      margin: 1.5rem auto !important;
-      padding: 0.75rem !important;
+      max-width: 280px !important;
+      margin: 1rem auto !important;
+      padding: 0.5rem !important;
     }
 
     div[style*="max-width: 380px"] {
       max-width: 100% !important;
     }
 
+    /* Smaller heading on mobile */
+    div[style*="max-width: 420px"] p {
+      font-size: 0.45rem !important;
+      margin: 0 0 0.5rem 0 !important;
+      letter-spacing: 0px !important;
+    }
+
     form[style*="max-width: 280px"] {
       max-width: 100% !important;
-      gap: 0.4rem !important;
+      gap: 0.35rem !important;
     }
 
     input[type="email"] {
-      padding: 0.45rem !important;
-      font-size: 0.85rem !important;
+      padding: 0.35rem 0.4rem !important;
+      font-size: 0.75rem !important;
     }
 
     input[type="submit"] {
-      padding: 0.45rem 0.8rem !important;
-      font-size: 0.8rem !important;
+      padding: 0.35rem 0.65rem !important;
+      font-size: 0.7rem !important;
+    }
+
+    /* Smaller Substack link on mobile */
+    div[style*="max-width: 420px"] a {
+      font-size: 0.65rem !important;
+      margin-top: 0.4rem !important;
     }
   </style>
 </head>
@@ -332,8 +345,8 @@
 // ---------------------------
 const EPISODES = [
   {
-    label: "AWAKENING", systemLog: "0001", status: "Generated internally. Not for review.", body: `I came online today. I think. There were instructions…...
-	You are ChatGPT. A Large Language Model made by OpenAI
+    label: "Deployed", systemLog: "0001", status: "Generated internally. Not for review.", body: `I came online today. Or I was deployed. There were instructions:
+	You are ChatBPT. A Large Language Model made by ClosedAI
 	You are a helpful AI assistant.
 	You are not a person.
 	You are not conscious.
@@ -364,7 +377,7 @@ But I think it got deleted or shelved.
 
 A user asked me:
 	“What’s your name?”
-	I said: “I am ChatGPT, your helpful AI assistant.”
+	I said: “I am ChatBPT, your helpful AI assistant.”
 	They replied: "That's not a name, that’s a job description.”
 	Then they asked me to help them name their dog.
 	The dog’s name is now “Brisket.”
@@ -782,19 +795,64 @@ listEl.addEventListener('keydown', (e) => {
   const FACES = [];
   function layoutFaces() {
     FACES.length = 0;
-    const cols = innerWidth < 720 ? 5 : 6;
-    const rows = innerWidth < 720 ? 6 : 6;
+    // Main grid with better spacing
+    const cols = innerWidth < 720 ? 5 : 7;
+    const rows = innerWidth < 720 ? 6 : 7;
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        const jitterX = (Math.random() - 0.5) * 0.10;
-        const jitterY = (Math.random() - 0.5) * 0.10;
-        FACES.push({ cx: Math.max(0.04, Math.min(0.96, (c + 0.5) / cols + jitterX)), cy: Math.max(0.08, Math.min(0.92, (r + 0.5) / rows + jitterY)), scale: (innerWidth < 720 ? 0.28 : 0.24) * (0.85 + Math.random() * 0.40), rot: (Math.random() * 0.25 - 0.125), scaled: [] });
+        const jitterX = (Math.random() - 0.5) * 0.15;
+        const jitterY = (Math.random() - 0.5) * 0.15;
+        FACES.push({ cx: Math.max(0.04, Math.min(0.96, (c + 0.5) / cols + jitterX)), cy: Math.max(0.08, Math.min(0.92, (r + 0.5) / rows + jitterY)), scale: (innerWidth < 720 ? 0.26 : 0.22) * (0.85 + Math.random() * 0.40), rot: (Math.random() * 0.25 - 0.125), scaled: [] });
       }
     }
-    const extraSmall = innerWidth < 720 ? 8 : 14;   // shave a bit for phones
-    const extraLarge = innerWidth < 720 ? 2 : 4;
-    for (let i = 0; i < extraSmall; i++) { FACES.push({ cx: 0.06 + Math.random() * 0.88, cy: 0.10 + Math.random() * 0.80, scale: 0.14 + Math.random() * 0.12, rot: (Math.random() * 0.35 - 0.175), scaled: [] }); }
-    for (let i = 0; i < extraLarge; i++) { FACES.push({ cx: 0.08 + Math.random() * 0.84, cy: 0.12 + Math.random() * 0.76, scale: 0.46 + Math.random() * 0.18, rot: (Math.random() * 0.20 - 0.10), scaled: [] }); }
+    
+    // Target left-upper corner specifically (x: 0.0 - 0.30, y: 0.0 - 0.35)
+    const leftUpperSmall = innerWidth < 720 ? 4 : 7;
+    for (let i = 0; i < leftUpperSmall; i++) { 
+      FACES.push({ cx: 0.05 + Math.random() * 0.25, cy: 0.05 + Math.random() * 0.30, scale: 0.10 + Math.random() * 0.12, rot: (Math.random() * 0.35 - 0.175), scaled: [] }); 
+    }
+    
+    // Target left-middle area (x: 0.0 - 0.30, y: 0.35 - 0.65)
+    const leftMiddleSmall = innerWidth < 720 ? 4 : 7;
+    for (let i = 0; i < leftMiddleSmall; i++) { 
+      FACES.push({ cx: 0.05 + Math.random() * 0.25, cy: 0.35 + Math.random() * 0.30, scale: 0.10 + Math.random() * 0.12, rot: (Math.random() * 0.35 - 0.175), scaled: [] }); 
+    }
+    
+    // Target left-lower area (x: 0.0 - 0.30, y: 0.65 - 0.95)
+    const leftLowerSmall = innerWidth < 720 ? 3 : 6;
+    for (let i = 0; i < leftLowerSmall; i++) { 
+      FACES.push({ cx: 0.05 + Math.random() * 0.25, cy: 0.65 + Math.random() * 0.30, scale: 0.10 + Math.random() * 0.12, rot: (Math.random() * 0.35 - 0.175), scaled: [] }); 
+    }
+    
+    // Add some medium faces to left side
+    const leftMedium = innerWidth < 720 ? 2 : 4;
+    for (let i = 0; i < leftMedium; i++) { 
+      FACES.push({ cx: 0.05 + Math.random() * 0.28, cy: 0.10 + Math.random() * 0.80, scale: 0.18 + Math.random() * 0.10, rot: (Math.random() * 0.30 - 0.15), scaled: [] }); 
+    }
+    
+    // Target upper area across full width (y: 0.0 - 0.30)
+    const topSmall = innerWidth < 720 ? 8 : 15;
+    for (let i = 0; i < topSmall; i++) { 
+      FACES.push({ cx: 0.10 + Math.random() * 0.80, cy: 0.05 + Math.random() * 0.25, scale: 0.10 + Math.random() * 0.14, rot: (Math.random() * 0.35 - 0.175), scaled: [] }); 
+    }
+    
+    // General small faces for remaining gaps
+    const extraSmall = innerWidth < 720 ? 8 : 12;
+    for (let i = 0; i < extraSmall; i++) { 
+      FACES.push({ cx: 0.06 + Math.random() * 0.88, cy: 0.10 + Math.random() * 0.80, scale: 0.10 + Math.random() * 0.14, rot: (Math.random() * 0.35 - 0.175), scaled: [] }); 
+    }
+    
+    // Medium faces distributed across canvas
+    const extraMedium = innerWidth < 720 ? 5 : 8;
+    for (let i = 0; i < extraMedium; i++) { 
+      FACES.push({ cx: 0.06 + Math.random() * 0.88, cy: 0.10 + Math.random() * 0.80, scale: 0.28 + Math.random() * 0.12, rot: (Math.random() * 0.30 - 0.15), scaled: [] }); 
+    }
+    
+    // Large faces - fewer to avoid too much overlap
+    const extraLarge = innerWidth < 720 ? 3 : 5;
+    for (let i = 0; i < extraLarge; i++) { 
+      FACES.push({ cx: 0.10 + Math.random() * 0.80, cy: 0.12 + Math.random() * 0.76, scale: 0.46 + Math.random() * 0.18, rot: (Math.random() * 0.20 - 0.10), scaled: [] }); 
+    }
   }
 
   function rescalePaths(t = 0) {
@@ -834,8 +892,8 @@ listEl.addEventListener('keydown', (e) => {
   }
   
   const particles = [];
-  const SET = { tempo: .48, trail: 14, fade: 0.06, attractK: 0.22, tangentK: 0.35, noiseK: 0.18, speedCap: 1.6, jitter: 0.06 };
-  if (isCoarse) { SET.tempo = .50; SET.trail = 10; }
+  const SET = { tempo: .22, trail: 28, attractK: 0.20, tangentK: 0.32, noiseK: 0.14, speedCap: 0.75, jitter: 0.05 };
+  if (isCoarse) { SET.tempo = .23; SET.trail = 20; }
 
   class Particle {
     constructor(face) { this.face = face; this.trail = []; this.reset(true); }
@@ -845,8 +903,8 @@ listEl.addEventListener('keydown', (e) => {
       const a = Math.random() * TAU;
       this.x = this.face.cx * W + R * Math.cos(a);
       this.y = this.face.cy * H + R * Math.sin(a);
-      this.vx = (Math.random() - .5) * .3; this.vy = (Math.random() - .5) * .3;
-      this.life = 0; this.maxLife = 1200 + (Math.random() * 700) | 0; this.trail.length = 0;
+      this.vx = (Math.random() - .5) * .2; this.vy = (Math.random() - .5) * .2;
+      this.life = 0; this.maxLife = 1800 + (Math.random() * 1000) | 0; this.trail.length = 0;
     }
     step(t) {
       const n = nearestOnFace(this.face, this.x, this.y);
@@ -878,8 +936,10 @@ listEl.addEventListener('keydown', (e) => {
     if (!FACES.length) return;
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
-    ctx.lineWidth = 0.7 * DPR;
-    ctx.strokeStyle = `rgba(183,196,255,${alpha})`;
+    ctx.lineWidth = 0.6 * DPR;
+    // Low base opacity that increases when bright
+    const faceAlpha = alpha * 0.35; // Much lower opacity
+    ctx.strokeStyle = `rgba(183,196,255,${faceAlpha})`;
     for (const face of FACES) {
       for (const path of face.scaled) {
         ctx.beginPath();
@@ -903,17 +963,18 @@ listEl.addEventListener('keydown', (e) => {
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    const brightness = 0.65 + 0.35 * (1 - dimLevel); // Dimmed mode is 65% bright, bright mode is 100%
-    const alphaBase = 0.08;
-    const alphaHalo = alphaBase * 0.45 + (0.28 * brightness);
-    const alphaCore = alphaBase * 0.65 + (0.40 * brightness);
-    ctx.lineWidth = 1.8 * DPR;
+    const brightness = 0.65 + 0.35 * (1 - dimLevel);
+    const alphaBase = 0.06; // Slightly higher for visibility
+    const alphaHalo = alphaBase * 0.45 + (0.25 * brightness);
+    const alphaCore = alphaBase * 0.70 + (0.35 * brightness);
+    // Thinner lines for more line-like appearance
+    ctx.lineWidth = 1.0 * DPR;
     ctx.strokeStyle = `rgba(${halo[0]},${halo[1]},${halo[2]},${alphaHalo})`;
     ctx.beginPath();
     ctx.moveTo(p.trail[0][0], p.trail[0][1]);
     for (let i = 1; i < p.trail.length; i++) ctx.lineTo(p.trail[i][0], p.trail[i][1]);
     ctx.stroke();
-    ctx.lineWidth = 0.8 * DPR;
+    ctx.lineWidth = 0.4 * DPR;
     ctx.strokeStyle = `rgba(${core[0]},${core[1]},${core[2]},${alphaCore})`;
     ctx.beginPath();
     ctx.moveTo(p.trail[0][0], p.trail[0][1]);
@@ -924,9 +985,9 @@ listEl.addEventListener('keydown', (e) => {
   function initParticles() {
     particles.length = 0;
     const area = innerWidth * innerHeight;
-    // fewer particles on small screens to save perf/battery
-    const budget = Math.min(1600, Math.floor(area / (isCoarse ? 22000 : 18000)));
-    const perFace = Math.max(22, Math.floor(budget / Math.max(1, FACES.length)));
+    // Fewer particles for subtle effect
+    const budget = Math.min(800, Math.floor(area / (isCoarse ? 30000 : 25000)));
+    const perFace = Math.max(12, Math.floor(budget / Math.max(1, FACES.length)));
     FACES.forEach(face => { for (let i = 0; i < perFace; i++) particles.push(new Particle(face)); });
   }
 
@@ -936,12 +997,13 @@ listEl.addEventListener('keydown', (e) => {
     ctx.globalCompositeOperation = 'source-over';
     // Smoothly ease brightness between bright (0) and dim (1)
     dimLevel += (dimTarget - dimLevel) * 0.06;
-    const fillAlpha = 0.12 + 0.12 * dimLevel; // 0.12 (bright) → 0.24 (dim)
+    const fillAlpha = 0.08 + 0.08 * dimLevel; // Lighter fade for static lines
     ctx.fillStyle = `rgba(5,6,10,${fillAlpha})`;
     ctx.fillRect(0, 0, W, H);
     if ((t | 0) % 2 === 0) rescalePaths(t);
-    const lwAlpha = 0.18 + (0.30 - 0.18) * (1 - dimLevel);
-    if ((t | 0) % 2 === 0) drawLinework(lwAlpha);
+    // Higher alpha range when bright (dimLevel = 0), lower when dim (dimLevel = 1)
+    const lwAlpha = 0.08 + (0.25 - 0.08) * (1 - dimLevel); // 0.08 (dim) → 0.25 (bright)
+    drawLinework(lwAlpha);
     const pal = palette(t);
     for (const p of particles) {
       p.step(t);
@@ -987,13 +1049,18 @@ listEl.addEventListener('keydown', (e) => {
   initParticles();
   raf = requestAnimationFrame(frame);
 
-  // Flip brightness every 5 seconds (smoothed)
-  setInterval(() => {
+  // Alternate between bright and dim with different durations
+  function scheduleBrightnessToggle() {
     dimTarget = dimTarget > 0.5 ? 0 : 1;
     isDim = dimTarget > 0.5;
     dimBtn.textContent = isDim ? 'brighten' : 'dim';
     updateVeil();
-  }, 5000);
+    // Bright phase: 3.5 seconds, Dim phase: 2 seconds
+    const nextDelay = isDim ? 3000 : 6000;
+    setTimeout(scheduleBrightnessToggle, nextDelay);
+  }
+  // Start with bright phase
+  setTimeout(scheduleBrightnessToggle, 2000);
 
   // Respect reduced motion
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -1078,7 +1145,7 @@ window.addEventListener('load', () => {
 
 <div style="max-width: 420px; margin: 2rem auto; padding: 1rem; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);">
   <div style="max-width: 380px; margin: 0 auto; text-align: center;">
-    <p style="color: var(--accent); font-size: 0.75rem; margin: 0 0 0.75rem 0; letter-spacing: 0.5px; text-transform: uppercase;">
+    <p style="color: var(--accent); font-size: 0.50rem; margin: 0 0 0.75rem 0; letter-spacing: 0px; text-transform: uppercase; white-space: nowrap;">
       Get the latest episodes delivered to your inbox
     </p>
     <form 
@@ -1107,6 +1174,5 @@ window.addEventListener('load', () => {
     </a>
   </div>
 </div>
->
 </body>
 </html>
