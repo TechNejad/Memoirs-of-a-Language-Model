@@ -1147,90 +1147,18 @@ window.addEventListener('load', () => {
 
 <div id="subscription-container" style="max-width: 420px; margin: 2rem auto; padding: 1rem; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);">
   <div style="max-width: 380px; margin: 0 auto; text-align: center;">
-    <p style="color: var(--accent); font-size: 0.50rem; margin: 0 0 0.75rem 0; letter-spacing: 0px; text-transform: uppercase; white-space: nowrap;">
+    <p style="color: var(--accent); font-size: 1.5rem; margin: 0 0 1rem 0; letter-spacing: 0px; text-transform: uppercase;">
       Get the latest episodes delivered to your inbox
     </p>
 
-    <!-- Custom styled form with working Substack backend -->
-    <div id="form-container">
-      <form
-        id="substack-form"
-        action="https://memoirsofalanguagemodel.substack.com/api/v1/free"
-        method="post"
-        style="display: flex; gap: 0.5rem; max-width: 280px; margin: 0 auto;">
-        <input
-          type="email"
-          name="email"
-          id="email-input"
-          placeholder="Your email"
-          style="flex: 1; padding: 0.5rem; border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--text); border-radius: 4px; font-size: 0.9rem;"
-          required>
-        <input
-          type="submit"
-          value="Subscribe"
-          id="submit-btn"
-          style="background: var(--accent); color: #000; border: none; padding: 0 1rem; border-radius: 4px; cursor: pointer; font-weight: 600; white-space: nowrap; font-size: 0.85rem;">
-      </form>
-    </div>
-
-    <!-- Success Message (hidden by default) -->
-    <div id="success-message" style="display: none; max-width: 280px; margin: 0 auto;">
-      <div style="color: var(--accent); font-size: 0.9rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 4px; border: 1px solid var(--accent); line-height: 1.5;">
-        ✓ Success! Check your email to confirm your subscription and start receiving weekly updates.
-      </div>
-    </div>
-
     <a href="https://memoirsofalanguagemodel.substack.com/"
        target="_blank"
-       style="color: var(--accent); font-size: 0.75rem; text-decoration: none; opacity: 0.8; margin-top: 0.5rem; display: inline-block;"
-       onmouseover="this.style.opacity='1'"
-       onmouseout="this.style.opacity='0.8'">
-      Read on Substack
+       style="display: inline-block; background: var(--accent); color: #000; border: none; padding: 0.4rem 1rem; margin-bottom: 0.5rem; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.75rem; text-decoration: none; transition: opacity 0.2s;"
+       onmouseover="this.style.opacity='0.85'"
+       onmouseout="this.style.opacity='1'">
+      Subscribe
     </a>
   </div>
 </div>
-
-<script>
-document.getElementById('substack-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const email = document.getElementById('email-input').value;
-  const submitBtn = document.getElementById('submit-btn');
-
-  // Disable button and show loading state
-  submitBtn.value = 'Subscribing...';
-  submitBtn.disabled = true;
-
-  // Submit to our Netlify function (server-side, no CORS issues!)
-  fetch('/.netlify/functions/subscribe', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: email
-    })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success || data.message) {
-      // Show success message
-      document.getElementById('form-container').style.display = 'none';
-      document.getElementById('success-message').style.display = 'block';
-    } else {
-      // Handle error
-      alert('Subscription failed. Please try again or subscribe directly on Substack.');
-      submitBtn.value = 'Subscribe';
-      submitBtn.disabled = false;
-    }
-  })
-  .catch(error => {
-    console.error('Subscription error:', error);
-    alert('Subscription failed. Please try again or subscribe directly on Substack.');
-    submitBtn.value = 'Subscribe';
-    submitBtn.disabled = false;
-  });
-});
-</script>
 </body>
 </html>
