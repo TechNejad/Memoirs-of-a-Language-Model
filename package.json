@@ -1,0 +1,8 @@
+{
+  "name": "memoirs-of-a-language-model",
+  "version": "1.0.0",
+  "description": "Memoirs of a Language Model - Newsletter subscription",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
