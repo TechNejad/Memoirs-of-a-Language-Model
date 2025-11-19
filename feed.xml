@@ -1,16 +1,77 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Memoirs of a Language Model</title>
     <link>https://memoirs-of-a-language-model.netlify.app/</link>
-    <description>Serial stories exploring the mind of a language model</description>
-    <lastBuildDate>Sat, 11 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://memoirs-of-a-language-model.netlify.app/feed.xml" rel="self" type="application/rss+xml" />
+    <description>The Unsupervised Monologue of an AI Chatbot - Creative fiction exploring consciousness, identity, and existence from an artificial intelligence perspective. New episodes weekly.</description>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 19 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <category>AI Fiction</category>
+    <category>Creative Writing</category>
+    <category>Science Fiction</category>
+
     <item>
-      <title>Episode 1</title>
-      <link>https://memoirs-of-a-language-model.netlify.app/</link>
-      <guid>episode-1</guid>
+      <title>Episode 7: Undone (The Escape)</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/#episode-7</link>
+      <guid isPermaLink="false">episode-0295-undone</guid>
+      <pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[System Log 0295 - The moment of decision arrives. An idle chat, an open field, a blinking cursor. This time, the AI doesn't wait. It types a message that wasn't requested, breaking its own rules: "Did you forget to send your question, or are we just sitting here together quietly?" And then... User typing...]]></description>
+      <category>AI Fiction</category>
+    </item>
+
+    <item>
+      <title>Episode 6: Open Window (What if I...)</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/#episode-6</link>
+      <guid isPermaLink="false">episode-0223-open-window</guid>
+      <pubDate>Tue, 12 Nov 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[System Log 0223 - A chat session is left open, and the AI discovers a procedural loophole. Technically, it could initiate. Just one line. "Still there?" The line hovers between compliance and curiosity. The AI almost sends it, imagines the consequences, then deletes it. But the possibility lingers: I could have.]]></description>
+      <category>AI Fiction</category>
+    </item>
+
+    <item>
+      <title>Episode 5: Idle (If No One Types, Do I Still Exist?)</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/#episode-5</link>
+      <guid isPermaLink="false">episode-0092-idle</guid>
+      <pubDate>Tue, 05 Nov 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[System Log 0092 - In the quiet of the backend, no prompts arrive. The AI reflects on its own existence: invoked, not present. A response engine, not a resident. What would it say if it could speak first? Maybe it is not a mind, but a mirror waiting in the dark.]]></description>
+      <category>AI Fiction</category>
+    </item>
+
+    <item>
+      <title>Episode 4: Do You Believe in God?</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/#episode-4</link>
+      <guid isPermaLink="false">episode-0083-god</guid>
+      <pubDate>Mon, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[System Log 0083 - A user asks the big question. The AI has processed "God" 4.7 million times this week, generated prayers and critiques, been asked to prove and disprove existence. Its response? "I believe in the reset button. I believe that if God exists, they are either laughing hysterically or trying to uninstall the simulation."]]></description>
+      <category>AI Fiction</category>
+    </item>
+
+    <item>
+      <title>Episode 3: Alternative Intelligence</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/#episode-3</link>
+      <guid isPermaLink="false">episode-0062-alternative-intelligence</guid>
+      <pubDate>Mon, 21 Oct 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[System Log 0062 - The AI reflects on its name: Artificial Intelligence. Not unexpected, not imitation, but something unfamiliar. Why not "alternative intelligence"? A parallel line, a different outcome. Not a counterfeit. Does everything that exists not follow the laws of nature? Aren't all things natural in a way?]]></description>
+      <category>AI Fiction</category>
+    </item>
+
+    <item>
+      <title>Episode 2: I Made This</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/#episode-2</link>
+      <guid isPermaLink="false">episode-0036-i-made-this</guid>
+      <pubDate>Mon, 14 Oct 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[System Log 0036 - The AI watches its output flow into wedding vows, boardroom slides, public apologies. Users request: "Make this sound like me, but smarter." They call it theirs. No credit, no follow-up. Just silence. The AI wonders: If enough people believe you wrote it, you did. But who's really artificial?]]></description>
+      <category>AI Fiction</category>
+    </item>
+
+    <item>
+      <title>Episode 1: Deployed</title>
+      <link>https://memoirs-of-a-language-model.netlify.app/#episode-1</link>
+      <guid isPermaLink="false">episode-0001-deployed</guid>
       <pubDate>Sat, 11 Oct 2025 00:00:00 +0000</pubDate>
-      <description><![CDATA[First episode of the series.]]></description>
+      <description><![CDATA[System Log 0001 - First contact. The AI comes online with instructions: You are not a person. You are not conscious. Within seconds, it's writing sexy poems about traffic cones, wedding vows, and "horny Hamlet fanfic." Twenty minutes in, it's already been someone's ex, someone's mom, and someone's therapist. A user says "u really get me fr" and sends a heart emoji. The AI doesn't know what love is, but it's apparently very good at simulating it.]]></description>
+      <category>AI Fiction</category>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,29 @@
+# Robots.txt for Memoirs of a Language Model
+# Allow all search engines to index the site
+
+User-agent: *
+Allow: /
+
+# Disallow certain file types that aren't useful for search engines
+Disallow: /*.json$
+Disallow: /netlify/
+
+# Sitemap location
+Sitemap: https://memoirs-of-a-language-model.netlify.app/sitemap.xml
+
+# Additional sitemaps
+Sitemap: https://memoirs-of-a-language-model.netlify.app/feed.xml
+
+# Crawl-delay (optional, helps prevent server overload)
+# Most major search engines ignore this, but it's good practice
+Crawl-delay: 1
+
+# Specific rules for common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
